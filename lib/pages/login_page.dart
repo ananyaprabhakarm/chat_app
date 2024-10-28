@@ -1,7 +1,9 @@
+import 'package:chat_app_flutter/services/auth/auth_service.dart';
 import 'package:chat_app_flutter/components/my_button.dart';
 import 'package:chat_app_flutter/components/my_textfield.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
@@ -10,7 +12,20 @@ class LoginPage extends StatelessWidget {
 
   LoginPage({super.key, required this.onTap});
 
-  void login() {}
+  void login(BuildContext context) async {
+    final authservice = AuthService();
+    
+    try {
+      await authservice.signInWithEmailPassword(
+          _emailController.text, _pwController.text);
+    } catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(e.toString()),
+              ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +62,7 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 25),
             MyButton(
               text: "Login",
-              onTap: login,
+              onTap: () => login(context),
             ),
             const SizedBox(height: 25),
             Row(
