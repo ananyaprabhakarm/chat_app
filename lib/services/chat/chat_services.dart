@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ChatServices {
-  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<List<Map<String, dynamic>>> getUsersStream() {
-    return _firebaseFirestore.collection("Users").snapshots().map((snapshot) {
+    return _firestore.collection("Users").snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final user = doc.data();
         return user;
@@ -22,8 +22,8 @@ class ChatServices {
     final Timestamp timestamp = Timestamp.now();
 
     Message newMessage = Message(
-        senderID: currentUserEmail,
-        senderEmail: currentUserID,
+        senderID: currentUserID,
+        senderEmail: currentUserEmail,
         receiverID: receiverID,
         message: message,
         timestamp: timestamp);
@@ -49,6 +49,6 @@ class ChatServices {
         .doc(chatRoomID)
         .collection("messages")
         .orderBy("timestamp", descending: false)
-        .snapshot();
+        .snapshots();
   }
 }
